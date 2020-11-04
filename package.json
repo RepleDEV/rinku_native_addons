@@ -11,7 +11,8 @@
         "build-all": "node-gyp rebuild && tsc",
         "postinstall": "tsc",
         "prepublishOnly": "tsc && node-gyp rebuild",
-        "eslint": "eslint"
+        "eslint": "eslint",
+        "prettier": "prettier --write ."
     },
     "keywords": [
         "native",

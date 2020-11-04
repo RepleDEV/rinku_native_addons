@@ -17,11 +17,13 @@ let windowObject: WindowObject;
         windowObject = {
             focusOnTopMost(): string {
                 return addon.windowFocusTopMost();
-            }
-        }
+            },
+        };
     } catch (err) {
-        console.error("[rinku_node_addon] Unsupported platform! All primary functions are disabled!");
+        console.error(
+            "[rinku_node_addon] Unsupported platform! All primary functions are disabled!"
+        );
     }
-})()
+})();
 
 export { windowObject as window };
