@@ -39,13 +39,13 @@ class Window {
                 
                 HWND hCurWnd = GetForegroundWindow();
                 DWORD dwMyID = GetCurrentThreadId();
-                DWORD dwCurID = GetWindowThreadProcessId (hCurWnd, NULL);
-                AttachThreadInput (dwCurID, dwMyID, TRUE);
+                DWORD dwCurID = GetWindowThreadProcessId(hCurWnd, NULL);
+                AttachThreadInput(dwCurID, dwMyID, TRUE);
                 BringWindowToTop(hWnd);
-                SetForegroundWindow (hWnd);
-                AttachThreadInput (dwCurID, dwMyID, FALSE);
-                SetFocus (hWnd);
-                SetActiveWindow (hWnd);
+                SetForegroundWindow(hWnd);
+                AttachThreadInput(dwCurID, dwMyID, FALSE);
+                SetFocus(hWnd);
+                SetActiveWindow(hWnd);
 
                 args.GetReturnValue().Set(
                     String::NewFromUtf8(

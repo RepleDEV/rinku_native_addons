@@ -1,17 +1,38 @@
 /// <reference types="node" />
 
 declare interface WindowObject {
+    /**
+     * Set window focus to window with highest z-order.
+     */
     focusOnTopMost(): string;
+}
+
+declare interface KeyboardObject {
+    /**
+     * Simulate keypress.
+     * @param keyCode KeyCode to press. Value must be below 2^8 (256).
+     */
+    keyPress(keyCode: number): void;
+    /**
+     * Simulate keydown.
+     * @param keyCode KeyCode to hold down. Value must be below 2^8 (256)
+     */
+    keyDown(keyCode: number): void;
+    /**
+     * Simulate keyup.
+     * @param keyCode KeyCode to toggle up. Value must be below 2^8 (256)
+     */
+    keyUp(keyCode: number): void;
 }
 
 /**
  * Window functions.
  */
-declare const windowObject: WindowObject = {
-    /**
-     * Set window focus to window with highest z-order.
-     */
-    focusOnTopMost(): string;,
-};
+declare const windowObject: WindowObject;
 
-export { windowObject as window };
+/**
+ * Keyboard functions
+ */
+declare const keyboardObject: KeyboardObject;
+
+export { windowObject as window, keyboardObject as keyboard };
