@@ -25,6 +25,10 @@ declare interface KeyboardObject {
     keyUp(keyCode: number): void;
 }
 
+declare interface MouseObject {
+    move(x: number, y: number): void;
+}
+
 /**
  * Window functions.
  */
@@ -35,4 +39,13 @@ declare const windowObject: WindowObject;
  */
 declare const keyboardObject: KeyboardObject;
 
-export { windowObject as window, keyboardObject as keyboard };
+/**
+ * Mouse functions
+ */
+declare const mouseObject: MouseObject;
+
+export {
+    windowObject as window,
+    keyboardObject as keyboard,
+    mouseObject as mouse
+};
