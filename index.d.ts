@@ -58,7 +58,7 @@ declare interface MouseObject {
      */
     up(button: MouseButtons): void;
     /**
-     * Simulaet mouse CLICK
+     * Simulate mouse CLICK
      * @param button Mouse button to click
      */
     click(button: MouseButtons): void;

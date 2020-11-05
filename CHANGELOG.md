@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1 / 12-04-2020
+
+### > Changed
+
+Fixed JSDoc typo on: `./index.d.ts:61`.
+
 ## 1.3.0 / 12-04-2020
 
 ### > New
