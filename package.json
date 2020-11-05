@@ -6,12 +6,12 @@
     "gypfile": true,
     "scripts": {
         "build": "node-gyp rebuild",
+        "build:all": "node-gyp rebuild && tsc",
         "ts:build": "tsc",
         "ts:watch": "tsc -w",
-        "build-all": "node-gyp rebuild && tsc",
         "postinstall": "tsc",
-        "prepublishOnly": "tsc && node-gyp rebuild",
-        "eslint": "eslint",
+        "prepublishOnly": "npm run build:all",
+        "lint": "eslint",
         "prettier": "prettier --write ."
     },
     "keywords": [
