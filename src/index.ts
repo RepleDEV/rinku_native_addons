@@ -11,7 +11,12 @@ interface NodeAddon {
 
     // Mouse functions
     mouseMove(x: number, y: number): void;
+    mouseDown(button: MouseButtons): void;
+    mouseUp(button: MouseButtons): void;
+    mouseClick(button: MouseButtons): void;
 }
+
+type MouseButtons = "left" | "middle" | "right" | number;
 
 interface WindowObject {
     focusOnTopMost(): string;
@@ -25,6 +30,10 @@ interface KeyboardObject {
 
 interface MouseObject {
     move(x: number, y: number): void;
+    down(button: MouseButtons): void;
+    up(button: MouseButtons): void;
+    click(button: MouseButtons): void;
+    translateButton(button: MouseButtons): number;
 }
 
 let windowObject: WindowObject;
@@ -59,6 +68,34 @@ try {
     mouseObject = {
         move(x: number, y: number): void {
             addon.mouseMove(x, y);
+        },
+        down(button: MouseButtons): void {
+            button = this.translateButton(button);
+            addon.mouseDown(button)  
+        },
+        up(button: MouseButtons): void {
+            button = this.translateButton(button);
+            addon.mouseUp(button);
+        },
+        click(button: MouseButtons): void {
+            button = this.translateButton(button);
+            addon.mouseClick(button);
+        },
+        translateButton(button: MouseButtons): number {
+            switch (button) {
+                case "left":
+                    return 0;
+                case "right":
+                    return 2;
+                case "middle":
+                    return 1;
+                default:
+                    if (button > 2 || button < 0) {
+                        throw new Error("Invalid argument!");
+                    } else {
+                        return button;
+                    }
+            }
         }
     };
 } catch (err) {

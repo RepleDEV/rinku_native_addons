@@ -1,5 +1,14 @@
 /// <reference types="node" />
 
+declare type MouseButtons = 
+    "left" | 
+    "middle" | 
+    "right" | 
+    number;
+
+/**
+ * Window functions
+ */
 declare interface WindowObject {
     /**
      * Set window focus to window with highest z-order.
@@ -7,6 +16,9 @@ declare interface WindowObject {
     focusOnTopMost(): string;
 }
 
+/**
+ * Keyboard functions
+ */
 declare interface KeyboardObject {
     /**
      * Simulate keypress.
@@ -25,8 +37,36 @@ declare interface KeyboardObject {
     keyUp(keyCode: number): void;
 }
 
+/**
+ * Mouse functions
+ */
 declare interface MouseObject {
+    /**
+     * Simulate mouse movements. Might not work on multi-monitor setups.
+     * @param x X Coordinate
+     * @param y Y Coordinate
+     */
     move(x: number, y: number): void;
+    /**
+     * Simulate mouse DOWN. 
+     * @param button Mouse button to click
+     */
+    down(button: MouseButtons): void;
+    /**
+     * Simulate mouse UP
+     * @param button Mouse button to click
+     */
+    up(button: MouseButtons): void;
+    /**
+     * Simulaet mouse CLICK
+     * @param button Mouse button to click
+     */
+    click(button: MouseButtons): void;
+    /**
+     * Translates AND validates mouse button types.
+     * @param button Mouse button to click
+     */
+    translateButton(button: MouseButtons): number;
 }
 
 /**

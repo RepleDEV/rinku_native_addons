@@ -26,6 +26,9 @@ namespace rinku {
 
         // Mouse functions
         NODE_SET_METHOD(exports, "mouseMove", Mouse::move);
+        NODE_SET_METHOD(exports, "mouseDown", Mouse::down);
+        NODE_SET_METHOD(exports, "mouseUp", Mouse::up);
+        NODE_SET_METHOD(exports, "mouseClick", Mouse::click);
     }
 
     NODE_MODULE(NODE_GYP_MODULE_NAME, init);
