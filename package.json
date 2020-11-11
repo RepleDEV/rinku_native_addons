@@ -1,6 +1,6 @@
 {
     "name": "@repledev/rinku_native_addons",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "Native addons for the project: Rinku",
     "main": "index.js",
     "gypfile": true,

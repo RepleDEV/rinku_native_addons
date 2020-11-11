@@ -18,7 +18,7 @@ declare interface WindowObject {
      * Set window focus to the n-th z-order.
      * @param n Z-Order
      */
-    focusOnNthTitle(n: number): string;
+    focusOnNthWindow(n: number): string;
     /**
      * Gets all active window titles.
      * 
