@@ -5,6 +5,8 @@ interface NodeAddon {
     windowFocusTopMost(): string;
     windowFocusOnNthWindow(n: number): string;
     windowGetAllTitles(): Array<string>;
+    windowStoreCurrent(): string;
+    windowActivateStored(): string;
 
     // Keyboard functions
     keyboardKeyPress(keyCode: number): void;
@@ -24,6 +26,8 @@ interface WindowObject {
     focusOnTopMost(): string;
     focusOnNthWindow(n: number): string;
     getAllTitles(): Array<string>;
+    storeCurrentWindow(): string;
+    activateStoredWindow(): string;
 }
 
 interface KeyboardObject {
@@ -56,6 +60,12 @@ try {
         },
         getAllTitles(): Array<string> {
             return addon.windowGetAllTitles();
+        },
+        storeCurrentWindow(): string {
+            return addon.windowStoreCurrent();
+        },
+        activateStoredWindow(): string {
+            return addon.windowActivateStored();
         }
     };
     keyboardObject = {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.2 / 11-11-2020
+
+### > New
+
+New window functions:
+- `StoreCurrentWindow`
+- `ActivateStoredWindow`
+
 ## 2.1.0 / 11-11-2020
 
 ### > New

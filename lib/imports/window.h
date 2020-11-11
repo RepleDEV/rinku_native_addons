@@ -17,6 +17,7 @@ using Napi::Number;
 
 std::vector<HWND> windowArray;
 int nthWindow;
+HWND storedWindow;
 
 class Window {
     public: 
@@ -115,6 +116,32 @@ class Window {
             windowArray = {};
 
             return res;
+        }
+
+        static String StoreCurrent(const CallbackInfo& info) {
+            Env env = info.Env();
+
+            storedWindow = GetForegroundWindow();
+
+            return String::New(
+                env,
+                GetTitle(storedWindow)
+            );
+        }
+
+        static String ActivateStored(const CallbackInfo& info) {
+            Env env = info.Env();
+
+            if (storedWindow == NULL) {
+                return String::New(env, "");
+            } else {
+                HWND previousWindow = focusOnWindow(storedWindow);
+
+                return String::New(
+                    env,
+                    ("Changed window from: " + GetTitle(previousWindow) + " to: " + GetTitle(storedWindow))
+                );
+            }
         }
 
         static BOOL CALLBACK EnumWindowsProcGetAllWindows(HWND hWnd, LPARAM lParam) {

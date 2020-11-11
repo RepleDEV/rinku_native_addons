@@ -46,6 +46,28 @@ Object init(Env env, Object exports) {
         )
     );
 
+    exports.Set(
+        String::New(
+            env,
+            "windowStoreCurrent"
+        ),
+        Function::New(
+            env,
+            Window::StoreCurrent
+        )
+    );
+
+    exports.Set(
+        String::New(
+            env,
+            "windowActivateStored"
+        ),
+        Function::New(
+            env,
+            Window::ActivateStored
+        )
+    );
+
     // Keyboard functions
     exports.Set(
         String::New(

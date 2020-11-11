@@ -25,6 +25,16 @@ declare interface WindowObject {
      * @returns A string array according to their z-order.
      */
     getAllTitles(): Array<string>;
+    /**
+     * Stores current (active) window.
+     * 
+     * @returns Current title's
+     */
+    storeCurrentWindow(): string;
+    /**
+     * Activate stored window (from window.storeCurrentWindow).
+     */
+    activateStoredWindow(): string;
 }
 
 /**
