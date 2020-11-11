@@ -1,100 +1,40 @@
 #ifndef KEYBOARD_H_
 #define KEYBOARD_H_
 
+#include <napi.h>
 #include <windows.h>
 #include <string>
 #include <cmath>
 
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::Object;
-using v8::String;
-using v8::Integer;
-using v8::Value;
-using v8::Exception;
-using v8::Number;
+using Napi::String;
+using Napi::CallbackInfo;
+using Napi::Env;
+using Napi::Number;
+using Napi::TypeError;
+using Napi::Value;
 
 class Keyboard {
     public:
-        static void keyDown(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
+        static Value keyDown(const CallbackInfo& info) {
+            Env env = info.Env();
 
-            if (args.Length() < 1 || !args[0]->IsNumber()) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
+            if (info.Length() < 1) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT AMOUNT"
+                ).ThrowAsJavaScriptException();
 
-                return;
+                return env.Null();
+            } else if (!info[0].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARUMENT TYPES"
+                ).ThrowAsJavaScriptException();
+
+                return env.Undefined();
             }
 
-            int keyCode = (int) args[0].As<Number>()->Value();
-
-            INPUT input;
-            WORD vkey = floor(keyCode);
-            input.type = INPUT_KEYBOARD;
-            input.ki.wScan = MapVirtualKey(vkey, MAPVK_VK_TO_VSC);
-            input.ki.time = 0;
-            input.ki.dwExtraInfo = 0;
-            input.ki.wVk = vkey;
-            input.ki.dwFlags = 0;
-            SendInput(1, &input, sizeof(INPUT));
-        }
-        static void keyUp(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
-
-            if (args.Length() < 1 || !args[0]->IsNumber()) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
-
-                return;
-            }
-
-            int keyCode = (int) args[0].As<Number>()->Value();
-
-            INPUT input;
-            WORD vkey = floor(keyCode);
-            input.type = INPUT_KEYBOARD;
-            input.ki.wScan = MapVirtualKey(vkey, MAPVK_VK_TO_VSC);
-            input.ki.time = 0;
-            input.ki.dwExtraInfo = 0;
-            input.ki.wVk = vkey;
-            input.ki.dwFlags = KEYEVENTF_KEYUP;
-            SendInput(1, &input, sizeof(INPUT));
-        }
-        static void keyPress(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
-
-            if (args.Length() < 1 || !args[0]->IsNumber()) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
-
-                return;
-            }
-
-            int keyCode = (int) args[0].As<Number>()->Value();
-
-            if (keyCode > 255) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
-
-                return;
-            }
+            int keyCode = (int) info[0].As<Number>().DoubleValue();
 
             INPUT input;
             WORD vkey = floor(keyCode);
@@ -106,8 +46,76 @@ class Keyboard {
             input.ki.dwFlags = 0;
             SendInput(1, &input, sizeof(INPUT));
 
+            return env.Undefined();
+        }
+        static Value keyUp(const CallbackInfo& info) {
+            Env env = info.Env();
+
+            if (info.Length() < 1) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT AMOUNT"
+                ).ThrowAsJavaScriptException();
+
+                return env.Null();
+            } else if (!info[0].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARUMENT TYPES"
+                ).ThrowAsJavaScriptException();
+
+                return env.Undefined();
+            }
+
+            int keyCode = (int) info[0].As<Number>().DoubleValue();
+
+            INPUT input;
+            WORD vkey = floor(keyCode);
+            input.type = INPUT_KEYBOARD;
+            input.ki.wScan = MapVirtualKey(vkey, MAPVK_VK_TO_VSC);
+            input.ki.time = 0;
+            input.ki.dwExtraInfo = 0;
+            input.ki.wVk = vkey;
             input.ki.dwFlags = KEYEVENTF_KEYUP;
             SendInput(1, &input, sizeof(INPUT));
+
+            return env.Undefined();
+        }
+        static Value keyPress(const CallbackInfo& info) {
+            Env env = info.Env();
+
+            if (info.Length() < 1) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT AMOUNT"
+                ).ThrowAsJavaScriptException();
+
+                return env.Null();
+            } else if (!info[0].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARUMENT TYPES"
+                ).ThrowAsJavaScriptException();
+
+                return env.Undefined();
+            }
+
+            int keyCode = (int) info[0].As<Number>().DoubleValue();
+
+            INPUT input;
+            WORD vkey = floor(keyCode);
+            input.type = INPUT_KEYBOARD;
+            input.ki.wScan = MapVirtualKey(vkey, MAPVK_VK_TO_VSC);
+            input.ki.time = 0;
+            input.ki.dwExtraInfo = 0;
+            input.ki.wVk = vkey;
+            input.ki.dwFlags = 0;
+            SendInput(1, &input, sizeof(INPUT));
+
+            input.ki.dwFlags = KEYEVENTF_KEYUP;
+            SendInput(1, &input, sizeof(INPUT));
+
+            return env.Undefined();
         }
 };
 

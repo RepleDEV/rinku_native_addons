@@ -1,17 +1,14 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
+#include <napi.h>
 #include <windows.h>
 #include <string>
 #include "common.h"
 
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::Object;
-using v8::String;
-using v8::Integer;
-using v8::Value;
+using Napi::String;
+using Napi::CallbackInfo;
+using Napi::Env;
 
 HWND topMostWindow;
 
@@ -24,8 +21,8 @@ class Window {
             return Common::charToString(wnd_title, GetWindowTextLength(window) + 1);
         }
 
-        static void FocusTopmost(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
+        static String FocusTopmost(const CallbackInfo& info) {
+            Env env = info.Env();
 
             EnumWindows(EnumWindowsProc, NULL);
 
@@ -47,18 +44,14 @@ class Window {
                 SetFocus(hWnd);
                 SetActiveWindow(hWnd);
 
-                args.GetReturnValue().Set(
-                    String::NewFromUtf8(
-                        isolate,
-                        ("Changed window from: " + GetTitle(hCurWnd) + " to: " + GetTitle(hWnd)).c_str()
-                    ).ToLocalChecked()
+                return String::New(
+                    env, 
+                    ("Changed window from: " + GetTitle(hCurWnd) + " to: " + GetTitle(hWnd)).c_str()
                 );
             } else {
-                args.GetReturnValue().Set(
-                    String::NewFromUtf8(
-                        isolate,
-                        GetTitle(hWnd).c_str()
-                    ).ToLocalChecked()
+                return String::New(
+                    env,
+                    GetTitle(hWnd).c_str()
                 );
             }
         };

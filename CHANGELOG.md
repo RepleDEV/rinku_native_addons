@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0 / 11-11-2020
+
+### > Changed
+
+Changed to using node-addon-api.
+
 ## 1.3.1 / 11-04-2020
 
 ### > Changed

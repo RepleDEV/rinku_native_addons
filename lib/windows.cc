@@ -1,35 +1,104 @@
 #include <node.h>
+#include <napi.h>
 #include <windows.h>
 
 #include "imports/window.h"
 #include "imports/keyboard.h"
 #include "imports/mouse.h"
 
-namespace rinku {
-    using v8::FunctionCallbackInfo;
-    using v8::Isolate;
-    using v8::Local;
-    using v8::Object;
-    using v8::String;
-    using v8::Integer;
-    using v8::Value;
-    using v8::Number;
+using Napi::Object;
+using Napi::String;
+using Napi::Function;
+using Napi::Env;
 
-    void init(Local<Object> exports) {
-        // Window functions
-        NODE_SET_METHOD(exports, "windowFocusTopMost", Window::FocusTopmost);
-        
-        // Keyboard functions
-        NODE_SET_METHOD(exports, "keyboardKeyPress", Keyboard::keyPress);
-        NODE_SET_METHOD(exports, "keyboardKeyDown", Keyboard::keyDown);
-        NODE_SET_METHOD(exports, "keyboardKeyUp", Keyboard::keyUp);
+Object init(Env env, Object exports) {
+    // Window functions
+    exports.Set(
+        String::New(
+            env,
+            "windowFocusTopMost"
+        ),
+        Function::New(
+            env,
+            Window::FocusTopmost
+        )
+    );
 
-        // Mouse functions
-        NODE_SET_METHOD(exports, "mouseMove", Mouse::move);
-        NODE_SET_METHOD(exports, "mouseDown", Mouse::down);
-        NODE_SET_METHOD(exports, "mouseUp", Mouse::up);
-        NODE_SET_METHOD(exports, "mouseClick", Mouse::click);
-    }
+    // Keyboard functions
+    exports.Set(
+        String::New(
+            env,
+            "keyboardKeyPress"
+        ),
+        Function::New(
+            env,
+            Keyboard::keyPress
+        )
+    );
+    exports.Set(
+        String::New(
+            env,
+            "keyboardKeyDown"
+        ),
+        Function::New(
+            env,
+            Keyboard::keyDown
+        )
+    );
+    exports.Set(
+        String::New(
+            env,
+            "keyboardKeyUp"
+        ),
+        Function::New(
+            env,
+            Keyboard::keyUp
+        )
+    );
 
-    NODE_MODULE(NODE_GYP_MODULE_NAME, init);
+    // Mouse functions
+    exports.Set(
+        String::New(
+            env,
+            "mouseMove"
+        ),
+        Function::New(
+            env,
+            Mouse::move
+        )
+    );
+    exports.Set(
+        String::New(
+            env,
+            "mouseDown"
+        ),
+        Function::New(
+            env,
+            Mouse::down
+        )
+    );
+    exports.Set(
+        String::New(
+            env,
+            "mouseUp"
+        ),
+        Function::New(
+            env,
+            Mouse::up
+        )
+    );
+    exports.Set(
+        String::New(
+            env,
+            "mouseClick"
+        ),
+        Function::New(
+            env,
+            Mouse::click
+        )
+    );
+    
+    return exports;
 }
+
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, init);

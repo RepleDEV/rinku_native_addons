@@ -1,56 +1,65 @@
 #ifndef MOUSE_H_
 #define MOUSE_H_
 
+#include <napi.h>
 #include <windows.h>
 #include <string>
 
-using v8::Exception;
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::Object;
-using v8::String;
-using v8::Integer;
-using v8::Value;
-using v8::Number;
-using v8::Boolean;
+using Napi::String;
+using Napi::CallbackInfo;
+using Napi::Env;
+using Napi::Number;
+using Napi::TypeError;
+using Napi::Value;
 
 class Mouse {
     public: 
-        static void move(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
+        static Value move(const CallbackInfo& info) {
+            Env env = info.Env();
 
-            if (args.Length() < 2 || (!args[0]->IsNumber() || !args[1]->IsNumber())) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
+            if (info.Length() < 2) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT AMOUNT"
+                ).ThrowAsJavaScriptException();
 
-                return;
+                return env.Undefined();
+            } else if (!info[0].IsNumber() || !info[1].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARUMENT TYPES"
+                ).ThrowAsJavaScriptException();
+
+                return env.Undefined();
             }
 
-            int x = (int) args[0].As<Number>()->Value();
-            int y = (int) args[1].As<Number>()->Value();
+            int x = (int) info[0].As<Number>().DoubleValue();
+            int y = (int) info[1].As<Number>().DoubleValue();
 
             SetCursorPos(x, y);
+
+            return env.Undefined();
         }
-        static void down(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
+        static Value down(const CallbackInfo& info) {
+            Env env = info.Env();
 
-            if (args.Length() < 1 || !args[0]->IsNumber()) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
+            if (info.Length() < 1) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT LENGTH"
+                ).ThrowAsJavaScriptException();
 
-                return;
+                return env.Undefined();
+            } else if (!info[0].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARUMENT TYPE"
+                ).ThrowAsJavaScriptException();
+
+                return env.Undefined();
             }
 
-            int key = (int) args[0].As<Number>()->Value();
+            int key = (int) info[0].As<Number>().DoubleValue();
 
             INPUT input;
 
@@ -64,22 +73,29 @@ class Mouse {
             }
 
             SendInput(1, &input, sizeof(INPUT));
+
+            return env.Undefined();
         }
-        static void up(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
+        static Value up(const CallbackInfo& info) {
+            Env env = info.Env();
 
-            if (args.Length() < 1 || !args[0]->IsNumber()) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
+            if (info.Length() < 1) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT LENGTH"
+                ).ThrowAsJavaScriptException();
 
-                return;
+                return env.Undefined();
+            } else if (!info[0].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARUMENT TYPE"
+                ).ThrowAsJavaScriptException();
+
+                return env.Undefined();
             }
 
-            int key = (int) args[0].As<Number>()->Value();
+            int key = (int) info[0].As<Number>().DoubleValue();
 
             INPUT input;
 
@@ -93,22 +109,29 @@ class Mouse {
             }
 
             SendInput(1, &input, sizeof(INPUT));
+
+            return env.Undefined();
         }
-        static void click(const FunctionCallbackInfo<Value>& args) {
-            Isolate* isolate = args.GetIsolate();
+        static Value click(const CallbackInfo& info) {
+            Env env = info.Env();
 
-            if (args.Length() < 1 || !args[0]->IsNumber()) {
-                isolate->ThrowException(Exception::TypeError(
-                    String::NewFromUtf8(
-                        isolate,
-                        "INVALID ARGS"
-                    ).ToLocalChecked()
-                ));
+            if (info.Length() < 1) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT LENGTH"
+                ).ThrowAsJavaScriptException();
 
-                return;
+                return env.Undefined();
+            } else if (!info[0].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARUMENT TYPE"
+                ).ThrowAsJavaScriptException();
+
+                return env.Undefined();
             }
-            
-            int key = (int) args[0].As<Number>()->Value();
+
+            int key = (int) info[0].As<Number>().DoubleValue();
 
             INPUT inputs[2] = {0};
 
@@ -126,6 +149,8 @@ class Mouse {
             }
 
             SendInput(2, inputs, sizeof(INPUT));
+
+            return env.Undefined();
         }
 };
 
