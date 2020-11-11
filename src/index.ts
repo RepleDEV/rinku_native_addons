@@ -3,6 +3,8 @@ let addon: NodeAddon;
 interface NodeAddon {
     // Window functions
     windowFocusTopMost(): string;
+    windowFocusOnNthTitle(n: number): string;
+    windowGetAllTitles(): Array<string>;
 
     // Keyboard functions
     keyboardKeyPress(keyCode: number): void;
@@ -20,6 +22,8 @@ type MouseButtons = "left" | "middle" | "right" | number;
 
 interface WindowObject {
     focusOnTopMost(): string;
+    focusOnNthTitle(n: number): string;
+    getAllTitles(): Array<string>;
 }
 
 interface KeyboardObject {
@@ -47,6 +51,12 @@ try {
         focusOnTopMost(): string {
             return addon.windowFocusTopMost();
         },
+        focusOnNthTitle(n: number): string {
+            return addon.windowFocusOnNthTitle(n);
+        },
+        getAllTitles(): Array<string> {
+            return addon.windowGetAllTitles();
+        }
     };
     keyboardObject = {
         keyPress(keyCode: number): void {

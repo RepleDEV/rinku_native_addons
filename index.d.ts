@@ -14,6 +14,17 @@ declare interface WindowObject {
      * Set window focus to window with highest z-order.
      */
     focusOnTopMost(): string;
+    /**
+     * Set window focus to the n-th z-order.
+     * @param n Z-Order
+     */
+    focusOnNthTitle(n: number): string;
+    /**
+     * Gets all active window titles.
+     * 
+     * @returns A string array according to their z-order.
+     */
+    getAllTitles(): Array<string>;
 }
 
 /**
