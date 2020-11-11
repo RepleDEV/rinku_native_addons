@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0 / 11-11-2020
+
+### > New
+
+New window functions: 
+- FocusOnNthWindow
+- GetAllTitles
+
 ## 2.0.0 / 11-11-2020
 
 ### > Changed

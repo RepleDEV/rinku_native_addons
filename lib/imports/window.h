@@ -4,13 +4,19 @@
 #include <napi.h>
 #include <windows.h>
 #include <string>
+#include <vector>
+
 #include "common.h"
 
 using Napi::String;
 using Napi::CallbackInfo;
 using Napi::Env;
+using Napi::Array;
+using Napi::TypeError;
+using Napi::Number;
 
-HWND topMostWindow;
+std::vector<HWND> windowArray;
+int nthWindow;
 
 class Window {
     public: 
@@ -24,11 +30,105 @@ class Window {
         static String FocusTopmost(const CallbackInfo& info) {
             Env env = info.Env();
 
-            EnumWindows(EnumWindowsProc, NULL);
+            windowArray = {};
 
-            HWND hWnd = topMostWindow;
-            topMostWindow = NULL;
+            EnumWindows(EnumWindowsProcGetAllWindows, NULL);
 
+            HWND hWnd = windowArray[0];
+
+            windowArray = {};
+
+            if (isForeground(hWnd)) {
+                return String::New(
+                    env,
+                    GetTitle(hWnd)
+                );
+            }
+
+            HWND previousWindow = focusOnWindow(hWnd);
+
+            return String::New(
+                env,
+                ("Changed window from: " + GetTitle(previousWindow) + " to: " + GetTitle(hWnd))
+            );
+        }
+
+        static String FocusOnNthWindow(const CallbackInfo& info) {
+            Env env = info.Env();
+
+            if (info.Length() < 1) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT LENGTH"
+                ).ThrowAsJavaScriptException();
+
+                return String::New(env, "");
+            } else if (!info[0].IsNumber()) {
+                TypeError::New(
+                    env,
+                    "INVALID ARGUMENT TYPE"
+                ).ThrowAsJavaScriptException();
+
+                return String::New(env, "");
+            }
+
+            int n = ((int) info[0].As<Number>().DoubleValue()) - 1;
+
+            if (n < 0)n = 0;
+
+            windowArray = {};
+
+            EnumWindows(EnumWindowsProcGetAllWindows, NULL);
+
+            HWND hWnd = windowArray[n];
+
+            windowArray = {};
+
+            if (isForeground(hWnd)) {
+                return String::New(
+                    env,
+                    GetTitle(hWnd)
+                );
+            }
+
+            HWND previousWindow = focusOnWindow(hWnd);
+
+            return String::New(
+                env,
+                ("Changed window from: " + GetTitle(previousWindow) + " to: " + GetTitle(hWnd))
+            );
+        }
+
+        static Array GetAllWindowTitles(const CallbackInfo& info) {
+            Env env = info.Env();
+
+            windowArray = {};
+
+            EnumWindows(EnumWindowsProcGetAllWindows, NULL);
+
+            Array res = Array::New(env);
+
+            for (int i = 0;i < windowArray.size();++i) {
+                res.Set(i, GetTitle(windowArray[i]));
+            }
+
+            windowArray = {};
+
+            return res;
+        }
+
+        static BOOL CALLBACK EnumWindowsProcGetAllWindows(HWND hWnd, LPARAM lParam) {
+            int windowLength = GetWindowTextLength(hWnd);
+            if (windowLength == 0 || !IsWindowVisible(hWnd))return TRUE;
+            windowArray.push_back(hWnd);
+            return TRUE;
+        }
+
+        static bool isForeground(HWND wind) {
+            return wind == GetForegroundWindow();
+        }
+
+        static HWND focusOnWindow(HWND hWnd) {
             if (!isForeground(hWnd)) {
                 // From: https://github.com/sentialx/node-window-manager/blob/master/lib/windows.cc#L319
                 // License: https://github.com/sentialx/node-window-manager/blob/master/LICENSE
@@ -44,26 +144,10 @@ class Window {
                 SetFocus(hWnd);
                 SetActiveWindow(hWnd);
 
-                return String::New(
-                    env, 
-                    ("Changed window from: " + GetTitle(hCurWnd) + " to: " + GetTitle(hWnd)).c_str()
-                );
+                return hCurWnd;
             } else {
-                return String::New(
-                    env,
-                    GetTitle(hWnd).c_str()
-                );
+                return hWnd;
             }
-        };
-
-        static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
-            int windowLength = GetWindowTextLength(hWnd);
-            if (windowLength == 0 || !IsWindowVisible(hWnd) || topMostWindow != NULL)return TRUE;
-            topMostWindow = hWnd;
-            return TRUE;
-        }
-        static bool isForeground(HWND wind) {
-            return wind == GetForegroundWindow();
         }
 };
 

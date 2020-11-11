@@ -24,6 +24,28 @@ Object init(Env env, Object exports) {
         )
     );
 
+    exports.Set(
+        String::New(
+            env,
+            "windowGetAllTitles"
+        ),
+        Function::New(
+            env,
+            Window::GetAllWindowTitles
+        )
+    );
+
+    exports.Set(
+        String::New(
+            env,
+            "windowFocusOnNthWindow"
+        ),
+        Function::New(
+            env,
+            Window::FocusOnNthWindow
+        )
+    );
+
     // Keyboard functions
     exports.Set(
         String::New(
@@ -97,7 +119,7 @@ Object init(Env env, Object exports) {
             Mouse::click
         )
     );
-    
+
     return exports;
 }
 
